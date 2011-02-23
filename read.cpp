@@ -13,18 +13,24 @@ const char b_char = 4;
 
 Read::Read( char * b)
 {
-  convert(b);
+  length = countLength(b);
+  bases = std::vector<unsigned char>(length/b_char,0);
+  addchar(b);
 }
-Read::Read( const Read &init):length(init.length)
+Read::Read( const Read &init):
+  length(init.length)
 {
-  bases = new unsigned char[length/b_char];
-  unsigned int i;
-  for(i=0; i<=(length/b_char); i++)
-    bases[i]=init.bases[i];
+  std::vector<unsigned char>::const_iterator p;
+
+  bases = std::vector<unsigned char>(length/b_char,0);
+
+  for(p=init.bases.begin(); p!=init.bases.end(); p++)
+    cout << (int)*p << " ";
+  cout << endl;
 }
 Read::~Read()
 {
-  delete bases;
+  //delete bases;
 }
 unsigned int Read::getSize(void)
 {
@@ -34,17 +40,41 @@ unsigned int Read::getLength(void)
 {
   return length;
 }
+
 Read Read::operator!()
 {
-  unsigned int i;
-  Read * ptr_inv;
+    unsigned int i;
+    Read * ptr_inv;
+    
+    ptr_inv = new Read(*this);
+  
+    for(i=0; i<=bases.size(); i++)
+      ptr_inv->bases[i] = ~bases[i];
+  
+    return *ptr_inv;
+}
+bool Read::operator+=(Read read){
 
-  ptr_inv = new Read(*this);
+  unsigned int i, shift;
+  std::vector<unsigned char>::iterator pt;
 
-  for(i=0; i<=(length/b_int); i++)
-   ptr_inv->bases[i] = ~bases[i];
+  // aumenta o tamanho
+  length += read.length;
 
-   return *ptr_inv;
+  // reserva espaço na memória
+  bases.reserve( read.length/b_char );
+ 
+  shift = read.length % b_char;
+
+  for(pt=read.bases.begin();pt!=read.bases.end();pt++)
+    bases.push_back(*pt);
+
+  for(i=0;i<read.bases.size();i++){
+    bases[i+(read.length/b_char)] = read.bases[i];
+  }
+
+  return true;
+
 }
 ostream & operator<<( ostream &out, const Read & read)
 {
@@ -52,19 +82,18 @@ ostream & operator<<( ostream &out, const Read & read)
   for(i=0;i<read.length;i++)
     {
       // retira uma base do inteiro
-      b =     (read.bases[ i/b_char ] >> ((i*2) % b_char) ) & 3;
-      //cout << endl << (read.bases[ i/b_int ] >> ((i*2) % b_int) );
+      b =  (read.bases[ i/b_char ] >> (i % b_char)*2 ) & 3;
       switch(b){
-      case A:
+      case 0:
 	out << "A";
 	break;
-      case C:
+      case 1:
 	out << "C";
 	break;
-      case G:
+      case 2:
 	out << "G";
 	break;
-      case T:
+      case 3:
 	out << "T";
 	break;
       }
@@ -73,47 +102,43 @@ ostream & operator<<( ostream &out, const Read & read)
 
   return out;
 }
-void Read::convert(char * read)
+unsigned int Read::countLength(char * read)
 {
-  int count = 0;
-  while( read[count] != '\0')
-    count++;
-  length = count;
-
-  bases = new unsigned char[length/b_char];
-  for(count=0; count<=(length/b_char); count++)
-    bases[count]=0;
-
-  for(count=0;count<length;count++)
-    {
-      int b;
-      switch(read[count]){
+  unsigned int size=0;
+  while(read[size]!='\0')
+    size++;
+  return size;
+}
+void Read::addchar(char * read)
+{
+  unsigned int i;
+  for(i=0;i<length;i++){
+      char b;
+      switch(read[i]){
       case 'A':
       case 'a':
-	b=A;
+	b=0;
       break;
       
       case 'C':
       case 'c':
-	b=C;
+	b=1;
       break;
       
       case 'G':
       case 'g':
-	b=G;
+	b=2;
       break;
       
       case 'T':
       case 't':
-	b=T;
+	b=3;
       break;
       
       default:
 	cerr << "base invalida" << endl;
       }
       // adiciona uma base ao inteiro
-      bases[count/b_char] |= b << ((count*2) % b_char);
-      //cout << read[count] << bases[count/b_int] << endl;
-      //cout << b << " ";
+      bases[i/b_char] |= b << (i % b_char)*2;
     }
 }

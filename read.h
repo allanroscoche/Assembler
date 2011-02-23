@@ -2,9 +2,11 @@
 #define _READ_
 
 #include <iostream>
+#include <vector>
 
 using std::ostream;
 using std::istream;
+
 
 class Read {
 public:
@@ -12,13 +14,16 @@ public:
      Read( const Read &);
      ~Read();
      friend ostream &operator<<( ostream&, const Read &);
+     friend istream &operator>>( istream&, Read &);
      Read operator!();
+     bool operator+=(Read );
      unsigned int getLength();
      unsigned int getSize();
 private:
-     unsigned char * bases;
+     std::vector <unsigned char> bases;
      unsigned int length;
-     void convert(char *);
+     void addchar(char *);
+     unsigned int countLength(char *);
 };
 
 #endif

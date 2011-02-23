@@ -5,14 +5,21 @@ using std::endl;
 
 int main()
 {
-  Read teste("tacccgttaaaccccccccccccccccccccccccccccccccc");
+  Read teste("taccccccccc");
 
   cout << teste;
-
-  //cout << !teste;
+  
+  Read teste2(teste);
 
   cout << "Tam:" << teste.getLength() << endl;
-  cout << "Mem:" << teste.getSize() << endl;
+
+  cout << teste2;
+
+  teste2 += teste;
+
+  cout << teste2;
+
+  cout << "Tam:" << teste2.getLength() << endl;
 
   return 0;
 }
