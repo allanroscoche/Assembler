@@ -1,5 +1,5 @@
 #include <iostream>
-
+#include <stdlib.h>
 //using std::cout;
 //using std::endl;
 //using std::cerr;
@@ -10,7 +10,10 @@
 enum BASE { A, C, G, T};
 const int b_int = 16;
 const char b_char = 4;
-
+Read::Read(void)
+{
+  length = 0;
+}
 Read::Read( char * b)
 {
   length = countLength(b);
@@ -29,14 +32,9 @@ Read::Read( const Read &init):
     bases.push_back(*p);
   bases.push_back(*p);
 }
-
 Read::~Read()
 {
   //delete bases;
-}
-unsigned int Read::getSize(void)
-{
-  return sizeof(Read)+(length/b_char);
 }
 unsigned int Read::getLength(void)
 {
@@ -61,8 +59,6 @@ bool Read::operator+=(Read read){
   std::vector<unsigned char>::iterator pt;
 
   shift = (b_char - (length % b_char));
-  std::cout << shift << std::endl;
-  //shift = 0;
 
   // reserva espaço na memória
   bases.reserve( read.length/b_char );
@@ -72,7 +68,7 @@ bool Read::operator+=(Read read){
   bases.push_back(*pt >> shift*2);
 
   shift = length % b_char;
-  std::cout << "s:" << shift << std::endl;
+
   for(i=0;i<read.bases.size();i++){
     bases[i+(read.length/b_char)] |= read.bases[i] << shift*2;
   }
@@ -82,6 +78,60 @@ bool Read::operator+=(Read read){
 
   return true;
 
+}
+unsigned int Read::convert_solid(char * read)
+{
+  unsigned int i;
+  char b;
+  unsigned int size;
+
+  i=1;
+  while( read[i]!=0 )
+    i++;
+  size = i-1;
+
+  bases.reserve(size);
+
+  i=1;
+  while( read[i]!=0 )
+    {
+      switch(read[i])
+        {
+        case '0':
+          b=0;
+          break;
+        case '1':
+          b=1;
+          break;
+        case '2':
+          b=2;
+          break;
+        case '3':
+          b=3;
+          break;
+        default:
+          std::cerr << "err: " << read[i] << "\n";
+        }
+      if(i%4 == 1)
+        bases[i]=0;
+      // adiciona uma base ao inteiro
+      bases[(i-1)/b_char] |= b << ((i-1) % b_char)*2;
+      i++;
+    }
+
+  // returns the size
+  return size;
+}
+std::istream & operator>>( std::istream &in, Read & read)
+{
+  char * buff;
+  buff = (char *) malloc(sizeof(char)*500);
+  do
+    in.getline(buff,500);
+  while((buff[0] != 'T') && !in.eof());
+  std::cout << buff << std::endl;
+  if(!in.eof())
+    read.length = read.convert_solid(buff);
 }
 std::ostream & operator<<( std::ostream &out, const Read & read)
 {

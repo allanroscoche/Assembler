@@ -7,23 +7,23 @@
 using std::ostream;
 using std::istream;
 
-
 class Read {
-public:
-     Read( char * = 0);
-     Read( const Read &);
-     ~Read();
-     friend ostream &operator<<( ostream&, const Read &);
-     friend istream &operator>>( istream&, Read &);
-     Read operator!();
-     bool operator+=(Read );
-     unsigned int getLength();
-     unsigned int getSize();
-private:
-     std::vector <unsigned char> bases;
-     unsigned int length;
-     void addchar(char *);
-     unsigned int countLength(char *);
+ public:
+  Read( void);
+  Read( char *);
+  Read( const Read &);
+  ~Read();
+  friend ostream &operator<<( ostream&, const Read &);
+  friend istream &operator>>( istream&, Read &);
+  Read operator!();
+  bool operator+=(Read );
+  unsigned int getLength();
+ private:
+  std::vector <unsigned char> bases;
+  unsigned int length;
+  void addchar(char *);
+  unsigned int convert_solid(char *);
+  unsigned int countLength(char *);
 };
 
 #endif
