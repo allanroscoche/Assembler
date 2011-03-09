@@ -40,7 +40,18 @@ unsigned int Read::getLength(void)
 {
   return length;
 }
+Read Read::chop_tail(unsigned int size)
+{
+  length -= size;
 
+  for(int i=0;i<(size/b_char);i++)
+    bases.pop_back();
+  return *this;
+}
+Read Read::chop_head(unsigned int size)
+{
+  
+}
 Read Read::operator!()
 {
     unsigned int i;

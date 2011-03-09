@@ -18,6 +18,8 @@ class Read {
   Read operator!();
   bool operator+=(Read );
   unsigned int getLength();
+  Read chop_tail(unsigned int);
+  Read chop_head(unsigned int);
  private:
   std::vector <unsigned char> bases;
   unsigned int length;

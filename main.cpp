@@ -14,21 +14,16 @@ int main()
   Read teste2(teste);
   Read teste3;
 
+  cout << teste;
+  cout << teste.chop_tail(5);
+
+/*
   while(!dados.eof()){
     dados >> teste3;
     cout << "T" << teste3;
   }
-  /*
+*/
 
-  cout << "Tam:" << teste.getLength() << endl;
-
-  cout << teste2;
-
-  teste2 += teste;
-
-  cout << "Tam:" << teste2.getLength() << endl;
-
-  cout << teste2;
-  */
+  dados.close();
   return 0;
 }
