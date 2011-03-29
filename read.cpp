@@ -21,6 +21,14 @@ Read::Read( char * b)
   addchar(b);
 
 }
+Read::Read( const Read *init):
+  length(init->length)
+{
+  std::vector<unsigned char>::const_iterator p;
+  for(p=init->bases.begin(); p!=init->bases.end();p++)
+    bases.push_back(*p);
+  bases.push_back(*p);
+}
 Read::Read( const Read &init):
   length(init.length)
 {
@@ -40,6 +48,14 @@ unsigned int Read::getLength(void)
 {
   return length;
 }
+Read Read::chop(unsigned int size)
+{
+  Read tail = new Read(this);
+  tail.chop_tail(length-size);
+  this->chop_head(size);
+  
+  return tail;
+}
 Read Read::chop_tail(unsigned int size)
 {
   length -= size;
@@ -50,6 +66,20 @@ Read Read::chop_tail(unsigned int size)
 }
 Read Read::chop_head(unsigned int size)
 {
+  bases.erase(bases.begin(),bases.begin()+(size/b_char));
+
+  int desl = size % b_char;
+  if(desl)
+    {
+      for(int i=0;i<(length/b_char);i++)
+	{
+	  bases[i] = bases[i] >> (desl*2);
+	  bases[i] |= (bases[i+1] & (~b_char>>(b_char-desl))) << ((b_char-desl)*2);
+	}
+    }
+
+  length -= size;
+  return *this;
   
 }
 Read Read::operator!()
@@ -88,7 +118,7 @@ bool Read::operator+=(Read read){
   length += read.length;
 
   return true;
-
+                              
 }
 unsigned int Read::convert_solid(char * read)
 {

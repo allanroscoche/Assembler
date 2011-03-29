@@ -12,6 +12,7 @@ class Read {
   Read( void);
   Read( char *);
   Read( const Read &);
+  Read( const Read *);
   ~Read();
   friend ostream &operator<<( ostream&, const Read &);
   friend istream &operator>>( istream&, Read &);
@@ -20,6 +21,7 @@ class Read {
   unsigned int getLength();
   Read chop_tail(unsigned int);
   Read chop_head(unsigned int);
+  Read chop(unsigned int);
  private:
   std::vector <unsigned char> bases;
   unsigned int length;

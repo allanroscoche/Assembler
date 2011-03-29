@@ -15,7 +15,9 @@ int main()
   Read teste3;
 
   cout << teste;
-  cout << teste.chop_tail(5);
+  //cout << teste.chop_tail(5);
+  cout << teste.chop(3);
+  cout << teste;
 
 /*
   while(!dados.eof()){
