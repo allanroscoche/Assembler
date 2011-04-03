@@ -1,2 +1,27 @@
- - Criar a classe Seq
  - Criar o destruidor da classe Read
+ - Criar o Método "glue" em Read
+     O método "glue" irá juntar 2 reads da melhor forma possível
+     retornando a parte em comum dos dois reads. Os dois serão modificados 
+     sobrando apenas a diferença entre eles dois.
+ - Criar a Classe PTree
+ - Criar o Método Inserir
+   - Minimo de Funcionalidade: Deve-se ao menos conseguir criar a raiz
+     	       		       e se possivel alguns filhos
+ - Criar o Método Buscar
+   O método buscar deve implementar o melhor método para se buscar na árvore
+
+
+ - Fazer uma análise de quais Meta-informações devem ser armazenadas na árvore.
+     - Análise prévia: Quantidade de vezes q a seq foi encontrada
+       	       	       Quantidade de vezes usada.
+     - Princípio do pequeno erro: a sequencia pode ser usada mais vezes do que ela foi encontrada.
+ - Mostrar na tela todas as sequencias que tem apenas 1 base de diferença
+ - Aumentar gradualmente a diferença e Observar os Resultados
+ - A "junção" a principio deve ser feita em profundidade
+ 
+
+ - Rodar o exemplo(E.Coli) com o Velvet no departamento.
+ - Guardar os resuldados e criar pequenos testes para adicionar no repositório.
+
+
+ - Ler o código do Velvet
