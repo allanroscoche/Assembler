@@ -8,6 +8,7 @@ using std::ostream;
 using std::istream;
 
 class Read {
+
  public:
   Read( void);
   Read( char *);
@@ -22,6 +23,7 @@ class Read {
   Read chop_tail(unsigned int);
   Read chop_head(unsigned int);
   Read chop(unsigned int);
+
  private:
   std::vector <unsigned char> bases;
   unsigned int length;
