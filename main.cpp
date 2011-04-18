@@ -3,6 +3,7 @@
 using std::cout;
 using std::endl;
 #include "read.h"
+#include "ptree.h"
 
 int main()
 {
@@ -18,6 +19,11 @@ int main()
   //cout << teste.chop_tail(5);
   cout << teste.chop(3);
   cout << teste;
+
+  PTree t;
+  t.print();
+  t.insert(&teste);
+  t.print();
 
 /*
   while(!dados.eof()){

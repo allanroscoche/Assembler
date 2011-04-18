@@ -15,6 +15,7 @@ class Read {
   Read( const Read &);
   Read( const Read *);
   ~Read();
+  void print();
   friend ostream &operator<<( ostream&, const Read &);
   friend istream &operator>>( istream&, Read &);
   Read operator!();

@@ -201,6 +201,10 @@ std::ostream & operator<<( std::ostream &out, const Read & read)
 
   return out;
 }
+void Read::print()
+{
+  std::cout << *this;
+}
 unsigned int Read::countLength(char * read)
 {
   unsigned int size=0;
