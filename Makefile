@@ -15,4 +15,4 @@ $(PTREE).o: $(PTREE).cpp $(PTREE).h
 	g++ $(PTREE).cpp -c -o $(PTREE).o
 
 clean:
-	rm bases $(MAIN).o $(READ).o *~
+	rm bases $(MAIN).o $(READ).o $(PTREE).o

@@ -25,21 +25,20 @@ Read::Read( const Read *init):
   length(init->length)
 {
   std::vector<unsigned char>::const_iterator p;
-  for(p=init->bases.begin(); p!=init->bases.end();p++)
+  for(p=init->bases.begin(); p!=init->bases.end();p++){
     bases.push_back(*p);
-  bases.push_back(*p);
+  }
+ 
 }
 Read::Read( const Read &init):
   length(init.length)
 {
-  std::vector<unsigned char>::const_iterator p;
-
-  //bases = std::vector<unsigned char>(length/b_char,0);
-
-  for(p=init.bases.begin(); p!=init.bases.end(); p++)
-    bases.push_back(*p);
-  bases.push_back(*p);
+  bases.reserve(init.bases.size());
+  for(int i=0;i<=init.bases.size();i++)
+    bases[i] = init.bases[i];
+ 
 }
+
 Read::~Read()
 {
   //delete bases;
@@ -48,27 +47,30 @@ unsigned int Read::getLength(void)
 {
   return length;
 }
-Read Read::chop(unsigned int size)
+Read * Read::chop(unsigned int size)
 {
-  Read tail = new Read(this);
-  tail.chop_tail(length-size);
-  this->chop_head(size);
+  Read * head = new Read(this);
+  head->chop_head(size);
+  this->chop_tail(length-size);
   
-  return tail;
+  return head;
 }
-Read Read::chop_tail(unsigned int size)
+Read * Read::chop_tail(unsigned int size)
 {
   length -= size;
 
   for(int i=0;i<(size/b_char);i++)
     bases.pop_back();
-  return *this;
+  return this;
 }
-Read Read::chop_head(unsigned int size)
+Read * Read::chop_head(unsigned int size)
 {
+
+  //if(size > 4)
   bases.erase(bases.begin(),bases.begin()+(size/b_char));
 
   int desl = size % b_char;
+  std::cout << desl << std::endl;
   if(desl)
     {
       for(int i=0;i<(length/b_char);i++)
@@ -79,10 +81,31 @@ Read Read::chop_head(unsigned int size)
     }
 
   length -= size;
-  return *this;
+
+  return this;
   
 }
-Read Read::operator!()
+char Read::first_char()
+{
+  int base = bases[0] && 0x3;
+  switch(base)
+    {
+    case 0:
+      return 'A';
+    case 1:
+      return 'C';
+    case 2:
+      return 'G';
+    case 3:
+      return 'T';
+
+    }
+}
+int Read::first()
+{
+  return bases[0] & 0x3;
+}
+Read * Read::operator!()
 {
     unsigned int i;
     Read * ptr_inv;
@@ -92,9 +115,9 @@ Read Read::operator!()
     for(i=0; i<=bases.size(); i++)
       ptr_inv->bases[i] = ~bases[i];
 
-    return *ptr_inv;
+    return ptr_inv;
 }
-bool Read::operator+=(Read read){
+bool Read::operator+=(Read &read){
 
   unsigned int i, shift;
   std::vector<unsigned char>::iterator pt;
@@ -201,9 +224,58 @@ std::ostream & operator<<( std::ostream &out, const Read & read)
 
   return out;
 }
+int Read::operator==(Read &r)
+{
+  std::vector<unsigned char>::iterator pt;
+
+  if(bases.size() == r.size())
+    { 
+      for(pt=bases.begin();pt!=bases.end();pt++)
+	{
+	  
+	}
+    }
+}
+
+int Read::compare(Read &r, Chop &cut)
+{
+  int size = length - r.length;
+  int i,end;
+  bool continuous = true;
+
+  if(size > 0)
+    end = size;
+  else
+    end = length;
+
+  i=0;
+  end = end / b_char;
+  while(continuous && (i<end)) {
+    if(bases[i] != r.bases[i])
+      continuous = false;
+    i++;
+  }
+  i--;
+  cut.begin = 0;
+  int j=0;
+  continuous = true;
+  while((j<b_char) && continuous) {
+    if( ((bases[i] >> j*2) & 3) != ((r.bases[i] >> j*2) & 3) )
+      continuous = false;
+    j++;
+  }
+  cut.end = i*b_char + j - 1;
+
+  return cut.end - cut.begin;
+}
+
 void Read::print()
 {
   std::cout << *this;
+}
+unsigned int Read::size()
+{
+  return length;
 }
 unsigned int Read::countLength(char * read)
 {

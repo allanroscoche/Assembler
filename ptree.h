@@ -4,11 +4,13 @@ class PTree
 {
  public:
   PTree(void);
-  PTree * insert(Read * r);
-  void print();
+  PTree(Read r);
+  PTree * insert(Read & r);
+  void print(int level=0);
 
  private:
   bool full;
   Read * seq;
   PTree * base[4];
+
 };
