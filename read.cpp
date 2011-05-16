@@ -12,17 +12,16 @@ const int b_int = 16;
 const char b_char = 4;
 Read::Read(void)
 {
-  length = 0;
+  
 }
 Read::Read( char * b)
 {
-  length = countLength(b);
+  unsigned int length = countLength(b);
   bases = std::vector<unsigned char>(length/b_char,0);
   addchar(b);
 
 }
 Read::Read( const Read *init):
-  length(init->length)
 {
   std::vector<unsigned char>::const_iterator p;
   for(p=init->bases.begin(); p!=init->bases.end();p++){
@@ -31,7 +30,6 @@ Read::Read( const Read *init):
  
 }
 Read::Read( const Read &init):
-  length(init.length)
 {
   bases.reserve(init.bases.size());
   for(int i=0;i<=init.bases.size();i++)
@@ -45,7 +43,7 @@ Read::~Read()
 }
 unsigned int Read::getLength(void)
 {
-  return length;
+  return 0;
 }
 Read * Read::chop(unsigned int size)
 {

@@ -33,7 +33,8 @@ class Read {
 
  private:
   std::vector <unsigned char> bases;
-  unsigned int length;
+  unsigned char begin;
+  unsigned char end;
   void addchar(char *);
   unsigned int convert_solid(char *);
   unsigned int countLength(char *);
