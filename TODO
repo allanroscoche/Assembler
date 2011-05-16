@@ -1,7 +1,39 @@
+########################################
+
+ - Rever os reads
+   - Quantidade de elementos no vetor
+   - Cada elemento do vetor armazena 4 bases
+   - Onde inicia a primeira base no primeiro elemento
+   - Onde terminha a ultima base no ultimo elemento
+   - Vetor de elementos
+
+ - Criar a tabela de reads
+
+ - Criar o "Grude"
+
+  [T]  [T]  [C]  [G]
+  A:3  A:5  A:2  A:0
+  C:0  C:2  C:4  C:1
+  G:2  G:1  G:3  G:2
+  T:8  T:9  T:1  T:1
+
+ - Criar o  comparador
+
+ - Algoritmo:
+        - Criar os "grudes"
+        - Compara grude por grude
+             - Se comparação > 0.5
+                  - cria link(aresta)
+
+        - Retirar Ciclos do Grafo
+        - Mostrar o maior caminho possivel
+
+#######################################
+
  - Criar o destruidor da classe Read
  - Criar o Método "glue" em Read
      O método "glue" irá juntar 2 reads da melhor forma possível
-     retornando a parte em comum dos dois reads. Os dois serão modificados 
+     retornando a parte em comum dos dois reads. Os dois serão modificados
      sobrando apenas a diferença entre eles dois.
  - Criar a Classe PTree
  - Criar o Método Inserir
@@ -18,7 +50,7 @@
  - Mostrar na tela todas as sequencias que tem apenas 1 base de diferença
  - Aumentar gradualmente a diferença e Observar os Resultados
  - A "junção" a principio deve ser feita em profundidade
- 
+
 
  - Rodar o exemplo(E.Coli) com o Velvet no departamento.
  - Guardar os resuldados e criar pequenos testes para adicionar no repositório.
