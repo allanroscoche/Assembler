@@ -28,6 +28,6 @@ typedef ReadTable struct
 
 Read * createRead(unsigned char *);
 ReadTable * createTable(void);
-
+int compareRead(Read * A, Read * B);
 
 #endif
