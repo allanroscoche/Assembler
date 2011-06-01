@@ -126,8 +126,7 @@ ReadTable * createTable(unsigned char * arquivo)
   FILE *fp;
   unsigned char buffer[500];
   unsigned char * seq;
-  Read * readSeq1;
-  Read * readSeq2;
+  Read * readSeq;
   ReadTable * table;
 
   fp = fopen(arquivo, "r");
@@ -146,22 +145,12 @@ ReadTable * createTable(unsigned char * arquivo)
     read = fgets(buffer,500,fp);
     if(buffer[0] == 'T'){
       seq = convertSolid(buffer);
+      table->table = realloc(table->table,sizeof(Read*)*cont+1);
+      table->table[cont] = createRead(seq);
       cont++;
-      break;
       free(seq);
     }
   }
-  readSeq1 = (Read *) malloc(sizeof(Read));
-  convertRead(readSeq1,seq);
-  printf("%s\n",seq);
-  print(readSeq1);
-  //free(readSeq1->bases);
-  //free(readSeq1);
-
-  //readSeq2 = (Read *) malloc(sizeof(Read));
-  //convertRead(readSeq2,seq);
-  //print(readSeq2);
-  free(seq);
 
   table->size = cont;
   fclose(fp);
@@ -170,6 +159,15 @@ ReadTable * createTable(unsigned char * arquivo)
 
   return table;
 }
+
+void printTable(ReadTable * table)
+{
+  unsigned int i;
+  for(i=0;i<table->size;i++){
+    print(table->table[i]);
+  }
+}
+
 char * convertSolid(char * entrada)
 {
   char * saida;

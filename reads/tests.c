@@ -3,7 +3,6 @@
 
 int main(void)
 {
-  
   Read * seq1;
   unsigned char sequencia1[] = "acgt";
   seq1 = createRead(sequencia1);
@@ -23,6 +22,9 @@ int main(void)
 
   ReadTable * table;
   table = createTable("entrada.csfasta");
+  printTable(table);
+
+  getchar();
 
   return 0;
 }

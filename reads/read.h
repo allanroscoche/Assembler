@@ -24,6 +24,7 @@ Read * createRead(unsigned char *);
 void convertRead(Read *, unsigned char *);
 int compareRead(Read * A, Read * B);
 void print(Read * );
+void printTable(ReadTable * );
 ReadTable * createTable(unsigned char * );
 unsigned int convert(Read *, unsigned char *);
 char * convertSolid(char *);
