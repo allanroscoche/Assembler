@@ -17,18 +17,15 @@ typedef struct
 typedef struct
 {
   unsigned int size;
-  Read * table;
+  Read * * table;
 } ReadTable;
 
-<<<<<<< HEAD
 Read * createRead(unsigned char *);
-ReadTable * createTable(void);
+void convertRead(Read *, unsigned char *);
 int compareRead(Read * A, Read * B);
-=======
-Read * createRead(unsigned char * );
 void print(Read * );
 ReadTable * createTable(unsigned char * );
-
->>>>>>> 4787fe6ba8ad2f7995e3b46eeee1ca7b6021efe1
+unsigned int convert(Read *, unsigned char *);
+char * convertSolid(char *);
 
 #endif

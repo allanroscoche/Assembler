@@ -2,43 +2,41 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-unsigned int convertSolid(Read * seq, unsigned char * read)
+
+unsigned int convert(Read * seq, unsigned char * read)
 {
   unsigned int i;
+  for(i=0;i<seq->size+seq->end;i++)
+    seq->bases[i] = 0;
+
   int fim = seq->size*B_CHAR + seq->end;
   for(i=0;i<fim;i++){
-    seq->bases[i] = 0;
     char b;
     switch(read[i]){
     case 'A':
     case 'a':
       b=0;
       break;
-      
     case 'C':
     case 'c':
       b=1;
       break;
-      
     case 'G':
     case 'g':
       b=2;
       break;
-      
     case 'T':
     case 't':
       b=3;
       break;
-      
     default:
       printf("base invalida:%d\n",b);
     }
     // adiciona uma base ao inteiro
     seq->bases[i / B_CHAR] |= b << (i%B_CHAR)*2;
-    
   }
   return i;
-}
+  }
 
 unsigned int getSize(unsigned char * entrada)
 {
@@ -71,6 +69,27 @@ void print(Read * seq)
   printf("\n");
 }
 
+void convertRead(Read * novo, unsigned char * entrada)
+{
+  //if(novo == NULL){
+  //  printf("erro: read nao alocado\n");
+  //  return;
+  //}
+
+  int sizeSeq = getSize(entrada);
+  novo->size = sizeSeq / B_CHAR;
+  novo->end = sizeSeq % B_CHAR;
+  novo->begin = 0;
+
+  //printf("d:%d\n",sizeof(unsigned char)*novo->size+1);
+  novo->bases = (unsigned char *) malloc(sizeof(unsigned char)*(novo->size+1));
+  if(novo->bases == NULL){
+    printf("erro\n");
+    return;
+  }
+  convert(novo,entrada);
+}
+
 Read * createRead(unsigned char * entrada)
 {
   // alloca o ponteiro de Read
@@ -78,16 +97,21 @@ Read * createRead(unsigned char * entrada)
 
   // acha o tamanho
   int sizeSeq = getSize(entrada);
+
   novo->size = sizeSeq / B_CHAR;
   novo->end = sizeSeq % B_CHAR;
   novo->begin = 0;
-  
+
   // alloca o vetor
-  novo->bases = (unsigned char *) malloc (sizeof(unsigned char));
+  novo->bases = (unsigned char *) malloc (sizeof(unsigned char)*(novo->size+1));
+  if(novo->bases == NULL){
+    printf("erro: read nao alocado\n");
+    return NULL;
+  }
 
   //converte o read
-  convertSolid(novo,entrada);
-  
+  convert(novo,entrada);
+
   // retorna o endereco do read
   return novo;
 
@@ -101,6 +125,9 @@ ReadTable * createTable(unsigned char * arquivo)
 {
   FILE *fp;
   unsigned char buffer[500];
+  unsigned char * seq;
+  Read * readSeq1;
+  Read * readSeq2;
   ReadTable * table;
 
   fp = fopen(arquivo, "r");
@@ -109,19 +136,126 @@ ReadTable * createTable(unsigned char * arquivo)
     printf("Erro ao abrir o arquivo\n");
     return NULL;
   }
+
+  table = (ReadTable *) malloc (sizeof(ReadTable));
+
   int cont = 0;
-  char * read;
+  unsigned char * read;
   read = fgets(buffer,500,fp);
   while( read != NULL){
     read = fgets(buffer,500,fp);
     if(buffer[0] == 'T'){
-      
+      seq = convertSolid(buffer);
       cont++;
+      break;
+      free(seq);
     }
   }
-  
+  readSeq1 = (Read *) malloc(sizeof(Read));
+  convertRead(readSeq1,seq);
+  printf("%s\n",seq);
+  print(readSeq1);
+  //free(readSeq1->bases);
+  //free(readSeq1);
+
+  //readSeq2 = (Read *) malloc(sizeof(Read));
+  //convertRead(readSeq2,seq);
+  //print(readSeq2);
+  free(seq);
+
+  table->size = cont;
   fclose(fp);
-  
-  printf("%d sequencias\n",cont);
+
+  printf("%d sequencias\n",table->size);
+
   return table;
+}
+char * convertSolid(char * entrada)
+{
+  char * saida;
+  char primeiro, segundo;
+  int i=0;
+  int tamanho=0;
+
+  while(entrada[i++] != 0)
+    tamanho++;
+
+  saida = (char *) malloc (sizeof(char)*tamanho);
+
+  primeiro = entrada[0];
+  saida[0] = primeiro;
+
+  for(i=1;i<tamanho;i++) {
+    segundo = entrada[i];
+
+    switch(primeiro){
+    case 'A':
+      switch(segundo){
+      case '0':
+        saida[i]='A';
+        break;
+      case '1':
+        saida[i]='C';
+        break;
+      case '2':
+        saida[i]='G';
+        break;
+      case '3':
+        saida[i]='T';
+        break;
+      }
+      break;
+    case 'C':
+      switch(segundo){
+      case '0':
+        saida[i]='C';
+        break;
+      case '1':
+        saida[i]='A';
+        break;
+      case '2':
+        saida[i]='T';
+        break;
+      case '3':
+        saida[i]='G';
+        break;
+      }
+      break;
+    case 'G':
+      switch(segundo){
+      case '0':
+        saida[i]='G';
+        break;
+      case '1':
+        saida[i]='T';
+        break;
+      case '2':
+        saida[i]='A';
+        break;
+      case '3':
+        saida[i]='C';
+        break;
+      }
+      break;
+    case 'T':
+      switch(segundo){
+      case '0':
+        saida[i]='T';
+        break;
+      case '1':
+        saida[i]='G';
+        break;
+      case '2':
+        saida[i]='C';
+        break;
+      case '3':
+        saida[i]='A';
+        break;
+      }
+      break;
+    }
+    primeiro = saida[i];
+  }
+  saida[i+1]='\0';
+  return saida;
 }
