@@ -20,6 +20,8 @@ typedef struct
   Read * * table;
 } ReadTable;
 
+unsigned int compare(Read *, Read *);
+
 Read * createRead(unsigned char *);
 void convertRead(Read *, unsigned char *);
 int compareRead(Read * A, Read * B);

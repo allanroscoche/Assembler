@@ -4,27 +4,25 @@
 int main(void)
 {
   Read * seq1;
-  unsigned char sequencia1[] = "acgt";
+  unsigned char sequencia1[] = "acgtacgtacgt";
   seq1 = createRead(sequencia1);
   print(seq1);
 
   Read * seq2;
-  unsigned char sequencia2solid[] = "T0202233";
-  unsigned char * sequencia2;
-  sequencia2 = convertSolid(sequencia2solid);
+  unsigned char  sequencia2[] = "ccgtccgtacgtt";
   seq2 = createRead(sequencia2);
   print(seq2);
-  deleteRead(seq2);
 
-  Read * seq3;
-  seq3 = createRead(sequencia2);
-  print(seq3);
+  //Read * seq3;
+  //seq3 = createRead(sequencia2);
+  //print(seq3);
 
-  ReadTable * table;
-  table = createTable("entrada.csfasta");
-  printTable(table);
+  printf("result:%d\n",compare(seq1,seq2));
 
-  getchar();
+  //ReadTable * table;
+  //table = createTable("teste.csfasta");
+  //printTable(table);
+  //getchar();
 
   return 0;
 }

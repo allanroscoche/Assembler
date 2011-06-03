@@ -2,6 +2,30 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+#define QUAL 20
+unsigned int compare(Read * read1, Read * read2)
+{
+  unsigned int i;
+  unsigned int diff = 0;
+  if(read1->size <= read2->size){
+
+    for(j=0;j<QUAL;j++){
+    for(i=0;i<read1->size;i++){
+      if(read1->bases[i] != read2->bases[i])
+        diff++;
+    }
+    diff = diff + read2->size - read1->size;
+  }
+  else{
+    for(i=0;i<read2->size;i++){
+      if(read1->bases[i] != read2->bases[i])
+        diff++;
+    }
+  }
+  return diff;
+}
+
+
 
 unsigned int convert(Read * seq, unsigned char * read)
 {
@@ -17,16 +41,16 @@ unsigned int convert(Read * seq, unsigned char * read)
     case 'a':
       b=0;
       break;
-    case 'C':
-    case 'c':
+    case 'T':
+    case 't':
       b=1;
       break;
     case 'G':
     case 'g':
       b=2;
       break;
-    case 'T':
-    case 't':
+    case 'C':
+    case 'c':
       b=3;
       break;
     default:
@@ -56,13 +80,13 @@ void print(Read * seq)
 	printf("A");
 	break;
       case 1:
-	printf("C");
+	printf("T");
 	break;
       case 2:
 	printf("G");
 	break;
       case 3:
-	printf("T");
+	printf("C");
 	break;
       }
   }
