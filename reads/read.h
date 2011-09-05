@@ -4,6 +4,16 @@
 
 #define B_CHAR 4
 
+#define _3B 0x3F // 3 bases
+#define _2B 0xF  // 2 bases
+#define _1B 0x3  // 1 base
+
+#define _S1B 2 // shift 1 base
+#define _S2B 4 // shift 2 bases
+#define _S3B 6 // shift 3 bases
+
+#define QUAL 20
+
 typedef struct
 {
   unsigned char size; // tamanho do vetor

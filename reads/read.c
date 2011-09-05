@@ -2,28 +2,37 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#define QUAL 20
-unsigned int compare(Read * read1, Read * read2)
+unsigned int sobrepostos(Read * base, Read * read)
 {
-  unsigned int i;
-  unsigned int diff = 0;
-  if(read1->size <= read2->size){
+  unsigned int i,j;
+  //printf("size:%d\n",read->size);
 
-    for(j=0;j<QUAL;j++){
-    for(i=0;i<read1->size;i++){
-      if(read1->bases[i] != read2->bases[i])
-        diff++;
+  if(base->size >= read->size){
+    for(i=0; i<(read->size-1); i++){
+      if((base->bases[i]) != (((read->bases[i] >> _S1B) & _3B) |
+                              ((read->bases[i+1] & _1B) << _S3B )))
+        break;
     }
-    diff = diff + read2->size - read1->size;
-  }
-  else{
-    for(i=0;i<read2->size;i++){
-      if(read1->bases[i] != read2->bases[i])
-        diff++;
+    //printf("i:%d\n",i);
+    if(i == read->size-1){
+      if((base->bases[i]) != ((read->bases[i] >> _S1B) & _3B))
+        return 1;
     }
+
+    for(j=0; j<(read->size-1); j++){
+      if((base->bases[j]) != ~(((read->bases[j] >> _S1B) & _3B) |
+                              ((read->bases[j+1] & _1B) << _S3B )))
+        break;
+    }
+    if(j == read->size-1){
+      if((base->bases[j]) != ((read->bases[j] >> _S1B) & _3B))
+        return -1;
+    }
+
   }
-  return diff;
+  return 0;
 }
+
 
 
 
