@@ -13,7 +13,6 @@ unsigned int sobrepostos(Read * base, Read * read)
                               ((read->bases[i+1] & _1B) << _S3B )))
         break;
     }
-    //printf("i:%d\n",i);
     if(i == read->size-1){
       if((base->bases[i]) != ((read->bases[i] >> _S1B) & _3B))
         return 1;
@@ -28,7 +27,6 @@ unsigned int sobrepostos(Read * base, Read * read)
       if((base->bases[j]) != ((read->bases[j] >> _S1B) & _3B))
         return -1;
     }
-
   }
   return 0;
 }
