@@ -5,16 +5,17 @@
 #define QUAL 20
 unsigned int compare(Read * read1, Read * read2)
 {
-  unsigned int i;
+  unsigned int i,j;
   unsigned int diff = 0;
   if(read1->size <= read2->size){
 
     for(j=0;j<QUAL;j++){
-    for(i=0;i<read1->size;i++){
-      if(read1->bases[i] != read2->bases[i])
-        diff++;
+      for(i=0;i<read1->size;i++){
+	if(read1->bases[i] != read2->bases[i])
+	  diff++;
+      }
+      diff = diff + read2->size - read1->size;
     }
-    diff = diff + read2->size - read1->size;
   }
   else{
     for(i=0;i<read2->size;i++){
@@ -90,7 +91,7 @@ void print(Read * seq)
 	break;
       }
   }
-  printf("\n");
+  printf("\n");			
 }
 
 void convertRead(Read * novo, unsigned char * entrada)
