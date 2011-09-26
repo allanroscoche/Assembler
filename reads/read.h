@@ -15,7 +15,7 @@
 
 typedef struct
 {
-  unsigned char size; // tamanho do vetor
+  unsigned int size; // tamanho do vetor
   unsigned char begin:4; //inicio no primeiro byte
   unsigned char end:4; // fim no ultimo byte
 

@@ -30,3 +30,5 @@ if len(sys.argv) > 3:
         for linha in saida:
             print linha
 
+else:
+    print "Usage: ./shift arquivo deslocamento modo"

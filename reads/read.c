@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-unsigned int sobrepostos(Read * base, Read * read)
+unsigned int sobrepostos(Read * base, Read * read, int shift)
 {
   unsigned int i,j;
   //printf("size:%d\n",read->size);
@@ -31,7 +31,40 @@ unsigned int sobrepostos(Read * base, Read * read)
   return 0;
 }
 
+void adiciona(Read * base, Read * read, int shift){
 
+  int i;
+  int size = base->size;
+  
+  //printf(":%d\n",read->bases[size-1]);
+  switch(base->end){
+  case 0:
+    base->end += shift;
+    base->bases[size] = read->bases[size-1] >> ((4-shift)*2);
+    break;
+  case 1:
+    if(shift < 3){
+      base->end += shift;
+      base->bases[size] |= ( read->bases[size-1] & (0xFF << (shift)*2)) >> ((3-shift)*2);
+    } else {
+      base->end = 0;
+      base->size += 1;
+      base->bases[size] |= (read->bases[size-1]);
+    }
+    break;
+  case 2:
+    if(shift < 2){
+      base->end += shift;
+    } else {
+      base->size += 1;
+      base->end = (shift+2)%4;
+      
+    }
+    break;
+  case 3:
+    break;
+  }
+}
 
 
 unsigned int convert(Read * seq, unsigned char * read)
