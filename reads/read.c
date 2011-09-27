@@ -34,34 +34,52 @@ unsigned int sobrepostos(Read * base, Read * read, int shift)
 void adiciona(Read * base, Read * read, int shift){
 
   int i;
-  int size = base->size;
-  
-  //printf(":%d\n",read->bases[size-1]);
+  int size_b = base->size;
+  int size_r = read->size;
+  int m_shift = shift/4;
+  int r_shift = shift/4 + (shift%4)%2;
+
+  //base->size += m_shift;
+  shift = shift % 4;
+
+  //base->bases = (char *) realloc(base->bases, sizeof(char)*(size_b+m_shift));
+  //for(i=0;i<m_shift;i++){
+  //  base->bases[size_b+i] |= read->bases[size_r-r_shift+i] << (base->end*2);
+    //    base->bases[size_b+i+1] = read->bases[size_r-r_shift+i] >> ((4-base->end)*2);
+  //}
+  if(shift == 0)
+    return;
+  size_b = base->size;
+
   switch(base->end){
   case 0:
     base->end += shift;
-    base->bases[size] = read->bases[size-1] >> ((4-shift)*2);
+    base->bases[size_b] = read->bases[size_r-1] >> ((4-shift)*2);
     break;
   case 1:
     if(shift < 3){
       base->end += shift;
-      base->bases[size] |= ( read->bases[size-1] & (0xFF << (shift)*2)) >> ((3-shift)*2);
+      base->bases[size_b] |= ( read->bases[size_r-1]  >> ((3-shift)*2)) & (0xFC);
     } else {
       base->end = 0;
       base->size += 1;
-      base->bases[size] |= (read->bases[size-1]);
+      base->bases[size_b] |= (read->bases[size_r-1]) & 0xFC;
     }
     break;
   case 2:
     if(shift < 2){
       base->end += shift;
+      base->bases[size_b] |= ( read->bases[size_r-1]  >> ((2-shift)*2)) & (0xF0);
     } else {
       base->size += 1;
       base->end = (shift+2)%4;
-      
+      base->bases[size_b] |= (read->bases[size_r-1]) & (0xF0);
     }
     break;
   case 3:
+    base->size += 1;
+    base->end = (shift+3)%4;
+    base->bases[size_b] |= (read->bases[size_r-1]) & (0xC0);
     break;
   }
 }
