@@ -28,6 +28,7 @@ if len(sys.argv) > 3:
                 print linha
     else:
         for linha in saida:
+            print ">"
             print linha
 
 else:

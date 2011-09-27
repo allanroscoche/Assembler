@@ -3,6 +3,7 @@
 
 int main(void)
 {
+  /*
   Read * seq1;
   unsigned char sequencia1[] = "ttttt";
   seq1 = createRead(sequencia1);
@@ -23,9 +24,16 @@ int main(void)
 
   adiciona(seq1,seq2,3);
   print(seq1);
-
-  //ReadTable * table;
-  //table = createTable("teste.csfasta");
+  */
+  ReadTable * table;
+  table = createTable("../data/test.in");
+  unsigned int count=0;
+  unsigned int i;
+  for(i=0;i<table->size-1;i++){
+    if(sobrepostos(table->table[i],table->table[i+1]),1)
+      count++;
+  }
+  printf("N:%d\n",count);
   //printTable(table);
   //getchar();
 

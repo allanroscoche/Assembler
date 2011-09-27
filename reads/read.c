@@ -1,6 +1,7 @@
 #include "read.h"
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 
 unsigned int sobrepostos(Read * base, Read * read, int shift)
 {
@@ -112,7 +113,7 @@ unsigned int convert(Read * seq, unsigned char * read)
       b=3;
       break;
     default:
-      printf("base invalida:%d\n",b);
+      printf("base invalida:%c\n",read[i]);
     }
     // adiciona uma base ao inteiro
     seq->bases[i / B_CHAR] |= b << (i%B_CHAR)*2;
@@ -123,7 +124,7 @@ unsigned int convert(Read * seq, unsigned char * read)
 unsigned int getSize(unsigned char * entrada)
 {
   unsigned int i;
-  while(entrada[i] != 0)
+  while(entrada[i] != '\n')
     i++;
   return i;
 }
@@ -174,6 +175,8 @@ void convertRead(Read * novo, unsigned char * entrada)
 
 Read * createRead(unsigned char * entrada)
 {
+  //printf(":%s\n",entrada);
+
   // alloca o ponteiro de Read
   Read * novo = (Read *) malloc (sizeof(Read));
 
@@ -225,12 +228,13 @@ ReadTable * createTable(unsigned char * arquivo)
   read = fgets(buffer,500,fp);
   while( read != NULL){
     read = fgets(buffer,500,fp);
-    if(buffer[0] == 'T'){
-      seq = convertSolid(buffer);
+    if(buffer[0] != '>'){
+      //seq = convertSolid(buffer);
+      //memcpy(seq,buffer,31);
       table->table = realloc(table->table,sizeof(Read*)*cont+1);
-      table->table[cont] = createRead(seq);
+      table->table[cont] = createRead(buffer);
       cont++;
-      free(seq);
+      //free(seq);
     }
   }
 
