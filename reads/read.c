@@ -3,6 +3,12 @@
 #include <stdio.h>
 #include <string.h>
 
+#ifdef ARQUIVO
+#define END '\n'
+#else
+#define END '\0'
+#endif
+
 unsigned int sobrepostos(Read * base, Read * read, int shift)
 {
   unsigned int i,j;
@@ -38,24 +44,30 @@ void adiciona(Read * base, Read * read, int shift){
   int size_b = base->size;
   int size_r = read->size;
   int m_shift = shift/4;
-  int r_shift = shift/4 + (shift%4)%2;
 
   //base->size += m_shift;
-  shift = shift % 4;
+
 
   //base->bases = (char *) realloc(base->bases, sizeof(char)*(size_b+m_shift));
   //for(i=0;i<m_shift;i++){
   //  base->bases[size_b+i] |= read->bases[size_r-r_shift+i] << (base->end*2);
     //    base->bases[size_b+i+1] = read->bases[size_r-r_shift+i] >> ((4-base->end)*2);
   //}
-  if(shift == 0)
-    return;
   size_b = base->size;
+  m_shift = shift / 4;
+  shift = shift % 4;
+  printf("s:%d\n",shift);
 
   switch(base->end){
   case 0:
+    base->bases = (char *) realloc(base->bases,sizeof(char)*(size_b+m_shift));
+    base->size += m_shift;
+    for(i=1;i<=m_shift;i++){
+      base->bases[base->size-i] = read->bases[read->size-i] << (shift*2);
+      base->bases[base->size-i] |= read->bases[read->size-1-i] >> ((4-shift)*2);
+    }
     base->end += shift;
-    base->bases[size_b] = read->bases[size_r-1] >> ((4-shift)*2);
+    base->bases[base->size] |= read->bases[read->size-1] >> ((4-shift)*2);
     break;
   case 1:
     if(shift < 3){
@@ -124,7 +136,7 @@ unsigned int convert(Read * seq, unsigned char * read)
 unsigned int getSize(unsigned char * entrada)
 {
   unsigned int i;
-  while(entrada[i] != '\n')
+  while(entrada[i] != END )
     i++;
   return i;
 }

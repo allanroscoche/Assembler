@@ -3,9 +3,9 @@
 
 int main(void)
 {
-  /*
+  
   Read * seq1;
-  unsigned char sequencia1[] = "ttttt";
+  unsigned char sequencia1[] = "tttt";
   seq1 = createRead(sequencia1);
   print(seq1);
 
@@ -22,9 +22,9 @@ int main(void)
   //printf("result:%d\n",sobrepostos(seq1,seq2,1));
   //printf("result:%d\n",sobrepostos(seq2,seq3,1));
 
-  adiciona(seq1,seq2,3);
+  adiciona(seq1,seq2,5);
   print(seq1);
-  */
+  /*
   ReadTable * table;
   table = createTable("../data/test.in");
   unsigned int count=0;
@@ -35,7 +35,7 @@ int main(void)
   }
   printf("N:%d\n",count);
   //printTable(table);
-  //getchar();
-
+  /getchar();
+  */
   return 0;
 }
