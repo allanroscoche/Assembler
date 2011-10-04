@@ -10,7 +10,7 @@ int main(void)
   print(seq1);
 
   Read * seq2;
-  unsigned char  sequencia2[] = "ccttacgt";
+  unsigned char  sequencia2[] = "ccccccttacgtt";
   seq2 = createRead(sequencia2);
   print(seq2);
 
@@ -22,7 +22,7 @@ int main(void)
   //printf("result:%d\n",sobrepostos(seq1,seq2,1));
   //printf("result:%d\n",sobrepostos(seq2,seq3,1));
 
-  adiciona(seq1,seq2,5);
+  adiciona(seq1,seq2,10);
   print(seq1);
   /*
   ReadTable * table;
