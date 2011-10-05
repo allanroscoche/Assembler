@@ -44,88 +44,78 @@ void adiciona(Read * base, Read * read, int shift){
   int m_shift = shift/4;
 
   if(shift > (read->size*4 +read->end))
-    shift = read->size*4 +read->end;
+    return;
 
   m_shift = shift / 4;
   shift = shift % 4;
-  printf("s:%d, ",shift);
 
   m_shift += (base->end+read->end)/4;
   base->size += m_shift;
-  base->bases = (char *) realloc(base->bases,sizeof(char)*(base->size));
-  printf("b:%d, r:%d\n",base->end,read->end);
+  if(m_shift > 0)
+    base->bases = (char *) realloc(base->bases,sizeof(char)*(base->size));
+  printf("b:%d, r:%d, ",base->end,read->end);
+  printf("s:%d, ",shift);
+  printf("bs:%d, rs:%d, ",base->size, read->size);
 
-  if(((base->end + shift) <= 4) && (read->end <= shift)){
+  unsigned char seq1,seq2;
+  unsigned int last;
+
+  if(read->size == 4)
+    last = read->size-1;
+  else
+    last = read->size;
+
+  if(shift > read->end){
+    seq1 = (read->bases[last-1]);
+  }
+  else
+    seq1 = (read->bases[last]);
+
+  int desl;
+  if(read->end == 0)
+    desl = 4 - shift - base->end;
+  else
+    desl = (base->end+read->end-shift);
+
+  printf("d:%d ",desl);
+
+  if(desl >= 0)
+    seq1 = seq1 >> (desl*2);
+  else
+    seq1 = seq1 << (abs(desl)*2);
+
+  seq1 = seq1 & (0xFF << (base->end*2));
+
+  if(base->end != 4)
+    base->bases[base->size] |= seq1;
+  else
+    base->bases[base->size-1] |= seq1;
+
+  base->end += shift;
+
+
+  printf("\n");
+
+  /*
+
+  if(((base->end >= read->end)))
+    printf("-");
     base->bases[base->size] |= (read->bases[read->size-1] >> ((4-base->end-shift)*2)) & (0xFF << ((base->end)*2));
     base->end += shift;
   }
-  else if((base->end + shift) > 3){
+  else if((base->end + shift) >= 4){
+    printf("--");
     base->bases[base->size] |= ((read->bases[read->size-1] << ((base->end+shift)%4)*2)) & (0xFF << (base->end*2));
     base->size = base->size + ((base->end + shift) / 4);
     base->end = (base->end + shift) % 4;
     base->bases[base->size] = (read->bases[read->size-1] >> ((4-base->end)*2));
   }
   else if(shift > read->end){
-    
-  }
+    printf("---");
+    base->bases[base->size] = read->bases[read->size-1];
+    base->bases[base->size] |= (read->bases[read->size-2] << ((read->end-shift+4-base->end)*2) )& (0xFF << ((base->end)*2));;
+    }*/
 
-
-
-  /*
-  switch(base->end){
-  case 0:
-    switch(read->end){
-    case 0:
-      for(i=1;i<=m_shift;i++){
-        base->bases[base->size-i] = read->bases[read->size-i] << ((shift+read->end)*2);
-        if(shift > 0)
-          base->bases[base->size-i] |= read->bases[read->size-1-i] >> ((4-shift+read->end)*2);
-      }
-      base->end += shift;
-      base->bases[base->size] |= read->bases[read->size-1] >> ((4-shift)*2);
-      break;
-    case 1:
-      for(i=1;i<=m_shift;i++){
-        base->bases[base->size-i] = read->bases[read->size-i] >> (abs(shift-1))*2;
-        //base->bases[base->size-i] |= read->bases[read->size-i-1] ;
-      }
-      base->end += shift;
-      base->bases[base->size] |= (read->bases[read->size] << (shift-1)*2) ;
-      break;
-    case 2:
-      break;
-    case 3:
-      break;
-    }
-    break;
-
-  case 1:
-    if(shift < 3){
-      base->end += shift;
-      base->bases[size_b] |= ( read->bases[size_r-1]  >> ((3-shift)*2)) & (0xFC);
-    } else {
-      base->end = 0;
-      base->size += 1;
-      base->bases[size_b] |= (read->bases[size_r-1]) & 0xFC;
-    }
-    break;
-  case 2:
-    if(shift < 2){
-      base->end += shift;
-      base->bases[size_b] |= ( read->bases[size_r-1]  >> ((2-shift)*2)) & (0xF0);
-    } else {
-      base->size += 1;
-      base->end = (shift+2)%4;
-      base->bases[size_b] |= (read->bases[size_r-1]) & (0xF0);
-    }
-    break;
-  case 3:
-    base->size += 1;
-    base->end = (shift+3)%4;
-    base->bases[size_b] |= (read->bases[size_r-1]) & (0xC0);
-    break;
-    }
-*/
 }
 
 
@@ -166,7 +156,7 @@ unsigned int convert(Read * seq, unsigned char * read)
 
 unsigned int getSize(unsigned char * entrada)
 {
-  unsigned int i;
+  unsigned int i=0;
   while(entrada[i] != END )
     i++;
   return i;
