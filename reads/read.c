@@ -61,12 +61,12 @@ void adiciona(Read * base, Read * read, int shift){
   unsigned int last;
 
 
-  if(read->end != 0)
+  if((read->end != 0) && ((base->end + shift - read->end) < 5) )
     last = read->size+1;
   else
     last = read->size;
 
-  if(shift > read->end)
+  if(shift >= read->end)
     seq1 = (read->bases[last-1]);
   else
     seq1 = (read->bases[last]);
@@ -89,7 +89,7 @@ void adiciona(Read * base, Read * read, int shift){
    else
     seq1 = seq1 << (abs(desl)*2);
 
-  //seq1 = seq1 & (0xFF << (base->end*2));
+  seq1 = seq1 & (0xFF << (base->end*2));
 
   if((read->end != 0) && (read->end < shift)){
     seq3 = read->bases[read->size-1] ;
@@ -99,11 +99,17 @@ void adiciona(Read * base, Read * read, int shift){
       seq3 = seq3 << ((-desl)*2);
     }
     else */
-      seq3 = seq3 >> ((4+desl)*2);
-    seq3 = seq3 & (0xFF << (base->end*2));
-    base->bases[base->size] |= seq3;
+    seq3 = seq3 >> ((4+desl)*2);
+    if ((base->end + shift - read->end) > 4){
+      base->bases[base->size+1] |= seq3;
+      printf("@");
+    }
+    else {
+      seq3 = seq3 & (0xFF << (base->end*2));
+      base->bases[base->size] |= seq3;
+    }
   }
-  base->bases[base->size] = seq1;
+  base->bases[base->size] |= seq1;
 
 
   if((base->end + shift) > 4){
@@ -117,7 +123,7 @@ void adiciona(Read * base, Read * read, int shift){
 
     seq2 = seq2 >> (desl)*2;
 
-    base->bases[base->size+1] = seq2;
+    base->bases[base->size+1] |= seq2;
   }
 
   base->end += shift;
