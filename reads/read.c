@@ -61,7 +61,7 @@ void adiciona(Read * base, Read * read, int shift){
   unsigned int last;
 
 
-  if((read->end != 0) && (read->end <= shift))
+  if(read->end != 0)
     last = read->size+1;
   else
     last = read->size;
