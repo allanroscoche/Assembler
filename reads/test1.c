@@ -49,7 +49,7 @@ void shifter(int shift, int add_end){
 int main(void)
 {
   int i,j;
-  for(i=0;i<2;i++){
+  for(i=0;i<3;i++){
     for(j=1;j<=3;j++)
       shifter(j,i);
     printf("#########\n");

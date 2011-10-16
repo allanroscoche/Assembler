@@ -114,14 +114,20 @@ void adiciona(Read * base, Read * read, int shift){
 
   if((base->end + shift) > 4){
     printf("+ ");
-    seq2 = read->bases[last-1];
+    if ((base->end + shift - read->end) > 4)
+      seq2 = read->bases[last];
+    else
+      seq2 = read->bases[last-1];
 
     if(read->end == 0)
       desl = 4 - (shift+base->end)%4;
     else
-      desl = read->end - (base->end+shift)%4;
+      desl = read->end - ((base->end+shift)%4);
 
-    seq2 = seq2 >> (desl)*2;
+    if ((base->end + shift - read->end) > 4)
+      seq2 = seq2 << abs(desl)*2;
+    else
+      seq2 = seq2 >> abs(desl)*2;
 
     base->bases[base->size+1] |= seq2;
   }
