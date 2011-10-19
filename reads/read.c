@@ -66,10 +66,7 @@ void adiciona(Read * base, Read * read, int shift){
   else
     last = read->size;
 
-  if(shift >= read->end)
-    seq1 = (read->bases[last-1]);
-  else
-    seq1 = (read->bases[last]);
+  seq1 = (read->bases[last-1]);
 
   int desl;
   if(read->end != 0)
@@ -93,12 +90,6 @@ void adiciona(Read * base, Read * read, int shift){
 
   if((read->end != 0) && (read->end < shift)){
     seq3 = read->bases[read->size-1] ;
-    /*
-    if(base->end > read->end){
-      desl = desl%4;
-      seq3 = seq3 << ((-desl)*2);
-    }
-    else */
     seq3 = seq3 >> ((4+desl)*2);
     if ((base->end + shift - read->end) > 4){
       base->bases[base->size+1] |= seq3;
@@ -114,17 +105,20 @@ void adiciona(Read * base, Read * read, int shift){
 
   if((base->end + shift) > 4){
     printf("+ ");
-    if ((base->end + shift - read->end) > 4)
+    if (((base->end + shift - read->end) > 4) && (read->end != 0))
       seq2 = read->bases[last];
     else
       seq2 = read->bases[last-1];
 
     if(read->end == 0)
-      desl = 4 - (shift+base->end)%4;
+      desl = 4 - ((shift + base->end)%4);
     else
       desl = read->end - ((base->end+shift)%4);
 
-    if ((base->end + shift - read->end) > 4)
+    //printf("d:%d ",desl);
+
+
+    if (((base->end + shift - read->end) > 4) && (read->end != 0))
       seq2 = seq2 << abs(desl)*2;
     else
       seq2 = seq2 >> abs(desl)*2;
