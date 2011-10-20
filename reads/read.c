@@ -9,33 +9,32 @@
 #define END '\0'
 #endif
 
-unsigned int sobrepostos(Read * base, Read * read, int shift)
-{
+unsigned int sobrepostos(Read * base, Read * read, int shift){
   unsigned int i,j;
-  //printf("size:%d\n",read->size);
+  if((base->size == read->size) && (base->end == read->end)){
 
-  if(base->size >= read->size){
     for(i=0; i<(read->size-1); i++){
-      if((base->bases[i]) != (((read->bases[i] >> _S1B) & _3B) |
-                              ((read->bases[i+1] & _1B) << _S3B )))
-        break;
+      //      printf("i:%d,r:%x,b:%x\n",i,(read->bases[i]),
+      //       ((base->bases[i] >> (shift*2)))|
+      //       ((base->bases[i+1]) << ((4-shift)*2))&0xFF ) ;
+
+      if(read->bases[i] != (((base->bases[i] >> (shift*2))) |
+                            ((base->bases[i+1] << ((4-shift)*2))&0xFF) ) )
+        return 0;
     }
+    //printf("i:%d,s:%d\n",i,read->size-1);
+    //printf("r:%x,b:%x\n",(read->bases[i] & (0xFF >> ((shift)*2))),
+    //       (base->bases[i] >> (shift*2)));
     if(i == read->size-1){
-      if((base->bases[i]) != ((read->bases[i] >> _S1B) & _3B))
+      if((read->bases[i] & (0xFF >> (shift)*2) ) !=
+         (( (base->bases[i]>>(shift*2)) &  (0xFF >> (shift)*2)) ))
+        return 0;
+      else
         return 1;
     }
-
-    for(j=0; j<(read->size-1); j++){
-      if((base->bases[j]) != ~(((read->bases[j] >> _S1B) & _3B) |
-                              ((read->bases[j+1] & _1B) << _S3B )))
-        break;
-    }
-    if(j == read->size-1){
-      if((base->bases[j]) != ((read->bases[j] >> _S1B) & _3B))
-        return -1;
-    }
   }
-  return 0;
+  else
+    return 0;
 }
 
 void adiciona(Read * base, Read * read, int shift){
@@ -183,7 +182,7 @@ void print(Read * seq)
   for(i=0; i<fim ;i++){
     if((i%4)==0)
       printf(".");
-    switch( (seq->bases[i/4] >> (i%B_CHAR)*2) & 0x3)
+    switch( (seq->bases[i/4] >> (i%4)*2) & 0x3)
       {
       case 0:
         printf("A");
