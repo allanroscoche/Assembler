@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <string.h>
 
+//#define ARQUIVO
 #ifdef ARQUIVO
 #define END '\n'
 #else
@@ -23,8 +24,8 @@ unsigned int sobrepostos(Read * base, Read * read, int shift){
         return 0;
     }
     //printf("i:%d,s:%d\n",i,read->size-1);
-    //printf("r:%x,b:%x\n",(read->bases[i] & (0xFF >> ((shift)*2))),
-    //       (base->bases[i] >> (shift*2)));
+    printf("r:%x,b:%x\n",(read->bases[i] & (0xFF >> (shift*2)) ),
+           (base->bases[i] >> (shift*2)));
     if(i == read->size-1){
       if((read->bases[i] & (0xFF >> (shift)*2) ) !=
          (( (base->bases[i]>>(shift*2)) &  (0xFF >> (shift)*2)) ))
@@ -52,8 +53,8 @@ void adiciona(Read * base, Read * read, int shift){
   base->size += m_shift;
   if(m_shift > 0)
     base->bases = (char *) realloc(base->bases,sizeof(char)*(base->size));
-  printf("b:%d, r:%d, ",base->end,read->end);
-  printf("s:%d, ",shift);
+  //printf("b:%d, r:%d, ",base->end,read->end);
+  //printf("s:%d, ",shift);
   //printf("bs:%d, rs:%d, ",base->size, read->size);
 
   unsigned char seq1,seq2,seq3,seq4;
@@ -76,9 +77,9 @@ void adiciona(Read * base, Read * read, int shift){
   if((desl > 4) || (desl < -4))
     desl = (desl%4);
 
-  printf("d:%d ",desl);
-  if((read->end < shift) && (read->end !=0))
-    printf("$ ");
+  //printf("d:%d ",desl);
+  //if((read->end < shift) && (read->end !=0))
+  //  printf("$ ");
 
   if(desl >= 0)
     seq1 = seq1 >> (desl*2);
@@ -92,7 +93,7 @@ void adiciona(Read * base, Read * read, int shift){
     seq3 = seq3 >> ((4+desl)*2);
     if ((base->end + shift - read->end) > 4){
       base->bases[base->size+1] |= seq3;
-      printf("@");
+      //printf("@");
     }
     else {
       seq3 = seq3 & (0xFF << (base->end*2));
@@ -103,7 +104,7 @@ void adiciona(Read * base, Read * read, int shift){
 
 
   if((base->end + shift) > 4){
-    printf("+ ");
+    //printf("+ ");
     if (((base->end + shift - read->end) > 4) && (read->end != 0))
       seq2 = read->bases[last];
     else
@@ -128,7 +129,7 @@ void adiciona(Read * base, Read * read, int shift){
   base->end += shift;
 
 
-  printf("\n");
+  //printf("\n");
 
 }
 
@@ -250,10 +251,11 @@ Read * createRead(unsigned char * entrada)
   return novo;
 
 }
-int deleteRead(Read * read)
+void deleteRead(Read * read)
 {
   free(read->bases);
   free(read);
+  read=NULL;
 }
 ReadTable * createTable(unsigned char * arquivo)
 {
@@ -278,12 +280,12 @@ ReadTable * createTable(unsigned char * arquivo)
   while( read != NULL){
     read = fgets(buffer,500,fp);
     if(buffer[0] != '>'){
-      //seq = convertSolid(buffer);
-      //memcpy(seq,buffer,31);
+      seq = convertSolid(buffer);
+      memcpy(seq,buffer,31);
       table->table = realloc(table->table,sizeof(Read*)*cont+1);
-      table->table[cont] = createRead(buffer);
+      table->table[cont] = createRead(seq);
       cont++;
-      //free(seq);
+      free(seq);
     }
   }
 
@@ -295,12 +297,25 @@ ReadTable * createTable(unsigned char * arquivo)
   return table;
 }
 
+unsigned int countTable(ReadTable * table)
+{
+  unsigned int i;
+  unsigned int count=0;
+  for(i=0;i<table->size;i++){
+    if(table->table[i] != NULL)
+      count++;
+  }
+  return count;
+}
 void printTable(ReadTable * table)
 {
   unsigned int i;
   for(i=0;i<table->size;i++){
-    print(table->table[i]);
+    if(table->table[i] != NULL)
+      //printf("%d, ",table->table[i]->size);
+      print(table->table[i]);
   }
+  printf("\n");
 }
 
 char * convertSolid(char * entrada)

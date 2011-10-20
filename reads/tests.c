@@ -3,7 +3,7 @@
 
 int main(void)
 {
-  
+  /*
   Read * seq1;
   unsigned char sequencia1[] = "tttt";
   seq1 = createRead(sequencia1);
@@ -17,25 +17,59 @@ int main(void)
   Read * seq3;
   unsigned char  sequencia3[] = "ccgtccgtacgttatg";
   seq3 = createRead(sequencia3);
-  //print(seq3);
+  print(seq3);
 
   //printf("result:%d\n",sobrepostos(seq1,seq2,1));
   //printf("result:%d\n",sobrepostos(seq2,seq3,1));
 
-  adiciona(seq1,seq2,10);
-  print(seq1);
-  /*
+  //adiciona(seq1,seq2,10);
+
+  printf("s1:%d\n",(int)seq1);
+  deleteRead(seq1);
+  //free(seq1);
+  seq1=NULL;
+  printf("s1:%d\n",(int)seq1);
+  if(seq1 != NULL)
+    print(seq1);
+  // */
+  // /* 
   ReadTable * table;
   table = createTable("../data/test.in");
   unsigned int count=0;
-  unsigned int i;
-  for(i=0;i<table->size-1;i++){
-    if(sobrepostos(table->table[i],table->table[i+1]),1)
-      count++;
+  int stop;
+  unsigned int i,j,k;
+  for(k=0;k<15;k++){
+        stop=1;
+        printf("i:%d\n",k);
+        for(i=0;i<table->size-1;i++){
+          if(table->table[i] != NULL)
+            for(j=i+1;j<table->size-1;j++){
+              if(table->table[j] != NULL)
+                if(sobrepostos(table->table[i],table->table[j],1)){
+                  if(stop)
+                    print(table->table[i]);
+                  adiciona(table->table[i],table->table[j],1);
+                  if(stop){
+                    print(table->table[j]);
+                    print(table->table[i]);
+                    printf("------\n");
+                  }
+                  deleteRead(table->table[j]);
+                  table->table[j]=NULL;
+                  if(stop){
+                    stop=0;
+                    //getchar();
+                  }
+                  break;
+                }
+            }
+        }
   }
+  count = countTable(table);
   printf("N:%d\n",count);
-  //printTable(table);
-  /getchar();
-  */
+  //printf("%d\n",table->table[1]->size*4);
+  printTable(table);
+  //getchar();
+  // */
   return 0;
 }
