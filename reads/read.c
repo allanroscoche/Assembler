@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <string.h>
 
-//#define ARQUIVO
+#define ARQUIVO
 #ifdef ARQUIVO
 #define END '\n'
 #else
@@ -23,17 +23,21 @@ unsigned int sobrepostos(Read * base, Read * read, int shift){
                             ((base->bases[i+1] << ((4-shift)*2))&0xFF) ) )
         return 0;
     }
-    printf("s:%d,s:%d\n",shift,read->size-1);
-    printf("r:%x,b:%x\n",(read->bases[i+1] & (0xFF >> ((base->end-shift)*2)) ),
-           (base->bases[i+1] >> (shift*2)));
-
+    /*
+      if(base->end > shift){
+      //printf("s:%d,s:%d\n",shift,read->size-1);
+      printf("r:%x,b:%x\n",(read->bases[i+1] & (0xFF >> ((4-(base->end-shift))*2)) ),
+      (base->bases[i+1] >> (shift*2)));
+      }
+      // */
+    
     if(base->end  > shift){
-      if((read->bases[i+1] & (0xFF >> (base->end -shift)*2) ) !=
+      if((read->bases[i+1] & (0xFF >> (4 -(base->end-shift))*2) ) !=
          (( (base->bases[i+1]>>(shift*2)) )))
         return 0;
       else
         return 1;
-    }
+      }
   }
   else
     return 0;

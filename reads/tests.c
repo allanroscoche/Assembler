@@ -3,7 +3,7 @@
 
 int main(void)
 {
-  
+  /*
   Read * seq1;
   unsigned char sequencia1[] = "AGCTTTTCATTCTGACTGCAACGGGCAATAA";
   seq1 = createRead(sequencia1);
@@ -32,13 +32,22 @@ int main(void)
   //if(seq1 != NULL)
   //  print(seq1);
   // */
-   /* 
+ 
   ReadTable * table;
   table = createTable("../data/test.in");
   unsigned int count=0;
   int stop;
   unsigned int i,j,k;
-  for(k=0;k<15;k++){
+
+  /*
+  for(i=0;i<10;i++){
+    print(table->table[i]);
+    print(table->table[i+1]);
+    printf("R:%d\n",sobrepostos(table->table[i],table->table[i+1],1));
+  }
+  */
+  
+  //for(k=0;k<15;k++){
         stop=1;
         printf("i:%d\n",k);
         for(i=0;i<table->size-1;i++){
@@ -56,6 +65,7 @@ int main(void)
                   }
                   deleteRead(table->table[j]);
                   table->table[j]=NULL;
+                  i++;
                   if(stop){
                     stop=0;
                     //getchar();
@@ -64,11 +74,11 @@ int main(void)
                 }
             }
         }
-  }
+        //}
   count = countTable(table);
   printf("N:%d\n",count);
   //printf("%d\n",table->table[1]->size*4);
-  printTable(table);
+  //printTable(table);
   //getchar();
   // */
   return 0;
