@@ -23,12 +23,13 @@ unsigned int sobrepostos(Read * base, Read * read, int shift){
                             ((base->bases[i+1] << ((4-shift)*2))&0xFF) ) )
         return 0;
     }
-    //printf("i:%d,s:%d\n",i,read->size-1);
-    printf("r:%x,b:%x\n",(read->bases[i] & (0xFF >> (shift*2)) ),
-           (base->bases[i] >> (shift*2)));
-    if(i == read->size-1){
-      if((read->bases[i] & (0xFF >> (shift)*2) ) !=
-         (( (base->bases[i]>>(shift*2)) &  (0xFF >> (shift)*2)) ))
+    printf("s:%d,s:%d\n",shift,read->size-1);
+    printf("r:%x,b:%x\n",(read->bases[i+1] & (0xFF >> ((base->end-shift)*2)) ),
+           (base->bases[i+1] >> (shift*2)));
+
+    if(base->end  > shift){
+      if((read->bases[i+1] & (0xFF >> (base->end -shift)*2) ) !=
+         (( (base->bases[i+1]>>(shift*2)) )))
         return 0;
       else
         return 1;

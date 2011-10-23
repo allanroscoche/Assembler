@@ -3,14 +3,14 @@
 
 int main(void)
 {
-  /*
+  
   Read * seq1;
-  unsigned char sequencia1[] = "tttt";
+  unsigned char sequencia1[] = "AGCTTTTCATTCTGACTGCAACGGGCAATAA";
   seq1 = createRead(sequencia1);
   print(seq1);
 
   Read * seq2;
-  unsigned char  sequencia2[] = "ccccccttacgtt";
+  unsigned char  sequencia2[] = "GCTTTTCATTCTGACTGCAACGGGCAATAAG";
   seq2 = createRead(sequencia2);
   print(seq2);
 
@@ -19,20 +19,20 @@ int main(void)
   seq3 = createRead(sequencia3);
   print(seq3);
 
-  //printf("result:%d\n",sobrepostos(seq1,seq2,1));
+  printf("result:%d\n",sobrepostos(seq1,seq2,1));
   //printf("result:%d\n",sobrepostos(seq2,seq3,1));
 
   //adiciona(seq1,seq2,10);
 
-  printf("s1:%d\n",(int)seq1);
-  deleteRead(seq1);
+  //printf("s1:%d\n",(int)seq1);
+  //deleteRead(seq1);
   //free(seq1);
-  seq1=NULL;
-  printf("s1:%d\n",(int)seq1);
-  if(seq1 != NULL)
-    print(seq1);
+  //seq1=NULL;
+  //printf("s1:%d\n",(int)seq1);
+  //if(seq1 != NULL)
+  //  print(seq1);
   // */
-  // /* 
+   /* 
   ReadTable * table;
   table = createTable("../data/test.in");
   unsigned int count=0;
