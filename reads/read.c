@@ -186,8 +186,8 @@ void print(Read * seq)
   unsigned int i;
   int fim = seq->size*B_CHAR + seq->end;
   for(i=0; i<fim ;i++){
-    if((i%4)==0)
-      printf(".");
+    //if((i%4)==0)
+    //  printf(".");
     switch( (seq->bases[i/4] >> (i%4)*2) & 0x3)
       {
       case 0:
