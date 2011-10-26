@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#define ARQUIVO
+//#define ARQUIVO
 #ifdef ARQUIVO
 #define END '\n'
 #else
@@ -284,9 +284,9 @@ ReadTable * createTable(unsigned char * arquivo)
   read = fgets(buffer,500,fp);
   while( read != NULL){
     read = fgets(buffer,500,fp);
-    if(buffer[0] != '>'){
+    if(buffer[0] == 'T'){
       seq = convertSolid(buffer);
-      memcpy(seq,buffer,31);
+      //memcpy(seq,buffer,31);
       table->table = realloc(table->table,sizeof(Read*)*cont+1);
       table->table[cont] = createRead(seq);
       cont++;
