@@ -30,6 +30,7 @@ typedef struct
 } ReadTable;
 
 unsigned int compare(Read *, Read *);
+unsigned int comparador(Read *, Read *, unsigned int);
 
 Read * createRead(unsigned char *);
 void convertRead(Read *, unsigned char *);

@@ -10,6 +10,40 @@
 #define END '\0'
 #endif
 
+unsigned int comparador(Read * base, Read * read,unsigned int shift){
+  unsigned int i,size,count,ini;
+  size=base->size;
+  count=0;
+
+  for(i=size;i>0;i--){
+    if(base->bases[i] == read->bases[i] )
+      break;
+  }
+  i--;
+  ini=i;
+  for(;i>0;i--){
+    count++;
+    if(base->bases[i] != read->bases[i])
+      break;
+  }
+
+
+  if(count > shift){
+    print(base);
+    print(read);
+    base->size += (read->size - ini);
+    base->bases = (char *) realloc(base->bases,sizeof(char)*(base->size));
+    for(i=ini;i<read->size;i++)
+      base->bases[i+base->size] = read->bases[i];
+    print(base);
+    getchar();
+    return 1;
+  }
+  else
+    return 0;
+}
+
+
 unsigned int sobrepostos(Read * base, Read * read, int shift){
   unsigned int i,j;
   if((base->size == read->size) && (base->end == read->end)){
@@ -30,7 +64,7 @@ unsigned int sobrepostos(Read * base, Read * read, int shift){
       (base->bases[i+1] >> (shift*2)));
       }
       // */
-    
+
     if(base->end  > shift){
       if((read->bases[i+1] & (0xFF >> (4 -(base->end-shift))*2) ) !=
          (( (base->bases[i+1]>>(shift*2)) )))
@@ -186,8 +220,8 @@ void print(Read * seq)
   unsigned int i;
   int fim = seq->size*B_CHAR + seq->end;
   for(i=0; i<fim ;i++){
-    //if((i%4)==0)
-    //  printf(".");
+    if((i%4)==0)
+      printf(".");
     switch( (seq->bases[i/4] >> (i%4)*2) & 0x3)
       {
       case 0:
