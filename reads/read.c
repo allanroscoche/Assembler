@@ -16,16 +16,16 @@ unsigned int comparador(Read * base, Read * read,unsigned int shift){
   unsigned int i,size,count,ini;
   size=base->size;
   count=0;
-
-  //shift = 0;
+  if((base->next != NULL) || (read->next != NULL))
+     return 0;
   for(i=size-1;i>0;i--){
     count++;
     if(base->bases[i] != read->bases[i-shift])
       break;
   }
   //printf("count:%d, shift:%d, i:%d\n",count,shift, i);
-  
-  if(i < 5){
+  if(count > 5){
+    //    print(base);print(read);
     if(i==0){
       ini = i+shift;
       base->size += shift;
@@ -34,11 +34,13 @@ unsigned int comparador(Read * base, Read * read,unsigned int shift){
         base->bases[i+size] = read->bases[i+size-shift];
       deleteRead(read);
       read = NULL;
+      //print(base);print(read);
     }
     else {
-      read->size = i;
-      read->bases = (char *) realloc(base->bases,sizeof(char)*(read->size));
+      read->size = i-1;
+      //read->bases = (char *) realloc(base->bases,sizeof(char)*(read->size));
       read->next = base;
+      //print(base);print(read);
     }
     //print(base);
     //getchar();
@@ -209,7 +211,7 @@ unsigned int convert(Read * seq, unsigned char * read)
     }
     // adiciona uma base ao inteiro
     seq->bases[i / B_CHAR] |= b << (i%B_CHAR)*2;
-  }
+ }
   return i;
   }
 
@@ -348,7 +350,7 @@ unsigned int countTable(ReadTable * table)
   unsigned int i;
   unsigned int count=0;
   for(i=0;i<table->size;i++){
-    if(table->table[i] != NULL)
+    if((table->table[i] != NULL) && (table->table[i]->next == NULL))
       count++;
   }
   return count;
