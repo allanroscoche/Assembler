@@ -6,7 +6,7 @@ void shifter(int read_end, int add_end){
 
   Read * seq[4];
 
-  unsigned char sequencia1[] = "AGCTTTTCATTCTGACTGCAACGGGCAATAA";
+  unsigned char sequencia1[] = "AGCTTTTCATTCTGACTGCAACGGGCAA";
   seq[0] = createRead(sequencia1);
 
   unsigned char sequencia2[] = "acgt";
@@ -20,7 +20,7 @@ void shifter(int read_end, int add_end){
 
   Read * seq_add[4];
 
-  unsigned char  sequencia_add1[] = "GCTTTTCATTCTGACTGCAACGGGCAATAAG";
+  unsigned char  sequencia_add1[] = "TTTCATTCTGACTGCAACGGGCAATAAG";
   seq_add[0] = createRead(sequencia_add1);
 
   unsigned char  sequencia_add2[] = "CTTTTCATTCTGACTGCAACGGGCAATAAGT";
@@ -32,10 +32,9 @@ void shifter(int read_end, int add_end){
   unsigned char  sequencia_add4[] = "acgt";
   seq_add[3] = createRead(sequencia_add4);
 
-  for(i=0;i<3;i++){
-    print(seq[read_end]);
-    print(seq_add[i]);
-    printf("S:%d, R:%d \n\n",i+1,sobrepostos(seq[read_end],seq_add[i],i+1));
+  for(i=0;i<1;i++){
+    printf("R:%d\n",comparador(seq[read_end],seq_add[i],i+1));
+    printf("\n\n");
   }
   //printf("-----------\n");
 }

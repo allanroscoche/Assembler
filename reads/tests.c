@@ -7,6 +7,10 @@
 
 int main(void)
 {
+  
+
+
+  
   ReadTable * table[5];
   table[0] = createTable("solid.csfasta");
   unsigned int count=0;
@@ -26,29 +30,27 @@ int main(void)
   unsigned int other_count=0;
 
   count = table[0]->size;
-  printf("Io:%d\n",max_l);
   for(l=0;l<max_l;l++){
-    printf("l:%d\n",l);
     size = count;
     count=0;
-    k=7;
-    while((size > 0) && (k>5)){
+    k=1;
+    while((size > 0) && (k<3)){
       for(i=0;i<size;i++){
         if(table[l]->table[i] != NULL)
           for(j=i+1;(j<size)&&(j<(i+D_MAX));j++){
             if(table[l]->table[j]!=NULL)
               if(comparador(table[l]->table[i],table[l]->table[j],k)){
                 other_count++;
-                deleteRead(table[l]->table[j]);
-                table[l+1]->table[count++]=table[l]->table[i];
-                table[l]->table[i]=NULL;
-                table[l]->table[j]=NULL;
+                //deleteRead(table[l]->table[j]);
+                //table[l+1]->table[count++]=table[l]->table[i];
+                //table[l]->table[i]=NULL;
+                //table[l]->table[j]=NULL;
                 size-=1;
                 break;
               }
           }
       }
-      k--;
+      k++;
     }
   }
   printf("count:%d\n",other_count);

@@ -13,11 +13,12 @@
 
 #define QUAL 20
 
-typedef struct
+typedef struct Read
 {
   unsigned int size; // tamanho do vetor
   unsigned char begin:4; //inicio no primeiro byte
   unsigned char end:4; // fim no ultimo byte
+  struct Read * next;
 
   unsigned char * bases; // cada char tem que guardar 4 bases
 

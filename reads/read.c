@@ -10,33 +10,38 @@
 #define END '\0'
 #endif
 
+void deleteRead(Read * read);
+
 unsigned int comparador(Read * base, Read * read,unsigned int shift){
   unsigned int i,size,count,ini;
   size=base->size;
   count=0;
 
-  for(i=size;i>0;i--){
-    if(base->bases[i] == read->bases[i] )
-      break;
-  }
-  i--;
-  ini=i;
-  for(;i>0;i--){
+  //shift = 0;
+  for(i=size-1;i>0;i--){
     count++;
-    if(base->bases[i] != read->bases[i])
+    if(base->bases[i] != read->bases[i-shift])
       break;
   }
-
-
-  if(count > shift){
-    print(base);
-    print(read);
-    base->size += (read->size - ini);
-    base->bases = (char *) realloc(base->bases,sizeof(char)*(base->size));
-    for(i=ini;i<read->size;i++)
-      base->bases[i+base->size] = read->bases[i];
-    print(base);
-    getchar();
+  //printf("count:%d, shift:%d, i:%d\n",count,shift, i);
+  
+  if(i < 5){
+    if(i==0){
+      ini = i+shift;
+      base->size += shift;
+      base->bases = (char *) realloc(base->bases,sizeof(char)*(base->size));
+      for(i=0;i<ini;i++)
+        base->bases[i+size] = read->bases[i+size-shift];
+      deleteRead(read);
+      read = NULL;
+    }
+    else {
+      read->size = i;
+      read->bases = (char *) realloc(base->bases,sizeof(char)*(read->size));
+      read->next = base;
+    }
+    //print(base);
+    //getchar();
     return 1;
   }
   else
@@ -275,6 +280,7 @@ Read * createRead(unsigned char * entrada)
   novo->size = sizeSeq / B_CHAR;
   novo->end = sizeSeq % B_CHAR;
   novo->begin = 0;
+  novo->next = NULL;
 
   // alloca o vetor
   novo->bases = (unsigned char *) malloc (sizeof(unsigned char)*(novo->size+1));
@@ -318,7 +324,8 @@ ReadTable * createTable(unsigned char * arquivo)
   read = fgets(buffer,500,fp);
   while( read != NULL){
     read = fgets(buffer,500,fp);
-    if(buffer[0] == 'T'){
+     if(buffer[0] == 'T') {
+    //if(buffer[0] != '>'){
       seq = convertSolid(buffer);
       //memcpy(seq,buffer,31);
       table->table = realloc(table->table,sizeof(Read*)*cont+1);
