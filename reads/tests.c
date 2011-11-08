@@ -3,7 +3,7 @@
 #include <stdlib.h>
 
 #define D_MAX 5000
-#define max_l 4
+#define max_l 3
 
 int main(void){
 
@@ -11,11 +11,12 @@ int main(void){
   table = createTable("solid.csfasta");
   unsigned int count=0;
   int stop;
+  int result;
   unsigned int i,j,k,l;
-  unsigned int size;
+  unsigned int size,old_size;
   unsigned int max;
 
-  size=table->size/2;
+  old_size=table->size;
   /*
   for(l=1;l<=max_l;l++){
     table[l] = (ReadTable *) malloc (sizeof(ReadTable));
@@ -30,18 +31,28 @@ int main(void){
   for(l=0;l<max_l;l++){
     size = count;
     count=0;
-    k=1;
-    while((size > 0) && (k<3)){
+    k=0;
+    while((size > 0) && (k<4)){
       for(i=0;i<size;i++){
-        if(table->table[i] != NULL)
+        if((i % 90000) ==0)
+          printf("%d%% of %d\n",i*100/size,k);
+        if(table->table[i] != NULL){
           for(j=i+1;(j<size)&&(j<(i+D_MAX));j++){
-            if(table->table[j]!=NULL)
-              if(comparador(table->table[i],table->table[j],k)){
+            if(table->table[j]!=NULL){
+              result = comparador(table->table[i],table->table[j],k);
+              if(result>1){
+                if(result == 2){
+                  deleteRead(table->table[j]);
+                  table->table[j] = NULL;
+                  //size-=1;
+                }
                 other_count++;
-                size-=1;
+                //size-=1;
                 break;
               }
+            }
           }
+        }
       }
       k++;
     }
@@ -50,7 +61,7 @@ int main(void){
   printf("end\n");
 
   count = countTable(table);
-  printf("N:%d\n",count);
+  printf("O:%d, N:%d\n",old_size, count);
 
   // printTable(table[0]);
   //getchar();

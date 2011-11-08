@@ -12,37 +12,36 @@
 
 void deleteRead(Read * read);
 
-unsigned int comparador(Read * base, Read * read,unsigned int shift){
+int comparador(Read * base, Read * read,unsigned int shift){
   unsigned int i,size,count,ini;
   size=base->size;
   count=0;
   if((base->next != NULL) || (read->next != NULL))
      return 0;
-  for(i=size-1;i>0;i--){
+  for(i=size-1;(i-shift)>0;i--){
     count++;
     if(base->bases[i] != read->bases[i-shift])
       break;
   }
-  //printf("count:%d, shift:%d, i:%d\n",count,shift, i);
-  if(count > 5){
-    //    print(base);print(read);
+  if(count > 3){
     if(i==0){
-      ini = i+shift;
+      ini = shift;
       base->size += shift;
-      base->bases = (char *) realloc(base->bases,sizeof(char)*(base->size));
-      for(i=0;i<ini;i++)
-        base->bases[i+size] = read->bases[i+size-shift];
-      deleteRead(read);
-      read = NULL;
+      if(shift > 0){
+        //printf(".");
+        base->bases = (char *) realloc(base->bases,sizeof(char)*(base->size));
+        for(i=0;i<ini;i++)
+          base->bases[i+size] = read->bases[i+size-shift];
+      }
       //print(base);print(read);
+      return 2;
     }
     else {
+      read->old_size = read->size;
       read->size = i-1;
       //read->bases = (char *) realloc(base->bases,sizeof(char)*(read->size));
       read->next = base;
-      //print(base);print(read);
     }
-    //print(base);
     //getchar();
     return 1;
   }
@@ -258,8 +257,7 @@ void convertRead(Read * novo, unsigned char * entrada)
   int sizeSeq = getSize(entrada);
   novo->size = sizeSeq / B_CHAR;
   novo->end = sizeSeq % B_CHAR;
-  novo->begin = 0;
-
+  
   //printf("d:%d\n",sizeof(unsigned char)*novo->size+1);
   novo->bases = (unsigned char *) malloc(sizeof(unsigned char)*(novo->size+1));
   if(novo->bases == NULL){
@@ -281,7 +279,6 @@ Read * createRead(unsigned char * entrada)
 
   novo->size = sizeSeq / B_CHAR;
   novo->end = sizeSeq % B_CHAR;
-  novo->begin = 0;
   novo->next = NULL;
 
   // alloca o vetor
@@ -340,7 +337,7 @@ ReadTable * createTable(unsigned char * arquivo)
   table->size = cont;
   fclose(fp);
 
-  printf("%d sequencias\n",table->size);
+  //printf("%d sequencias\n",table->size);
 
   return table;
 }

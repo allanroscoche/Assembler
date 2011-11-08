@@ -16,8 +16,8 @@
 typedef struct Read
 {
   unsigned int size; // tamanho do vetor
-  unsigned char begin:4; //inicio no primeiro byte
-  unsigned char end:4; // fim no ultimo byte
+  unsigned char end; // fim do ultimo byte
+  unsigned int old_size; // tamanho alocado
   struct Read * next;
 
   unsigned char * bases; // cada char tem que guardar 4 bases
@@ -31,7 +31,7 @@ typedef struct
 } ReadTable;
 
 unsigned int compare(Read *, Read *);
-unsigned int comparador(Read *, Read *, unsigned int);
+int comparador(Read *, Read *, unsigned int);
 
 Read * createRead(unsigned char *);
 void convertRead(Read *, unsigned char *);
