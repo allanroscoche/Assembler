@@ -2,8 +2,8 @@
 #include "read.h"
 #include <stdlib.h>
 
-#define D_MAX 5000
-#define max_l 3
+#define D_MAX 50000
+#define max_l 1
 
 int main(void){
 
@@ -32,21 +32,22 @@ int main(void){
     size = count;
     count=0;
     k=0;
-    while((size > 0) && (k<4)){
+    while((size > 0) && (k<1)){
       for(i=0;i<size;i++){
         if((i % 90000) ==0)
-          printf("%d%% of %d\n",i*100/size,k);
+          printf("%d of %d%%\n",other_count,i*100/size);
         if(table->table[i] != NULL){
           for(j=i+1;(j<size)&&(j<(i+D_MAX));j++){
             if(table->table[j]!=NULL){
               result = comparador(table->table[i],table->table[j],k);
               if(result>1){
+                other_count++;
                 if(result == 2){
                   deleteRead(table->table[j]);
                   table->table[j] = NULL;
                   //size-=1;
+                  //break;
                 }
-                other_count++;
                 //size-=1;
                 break;
               }

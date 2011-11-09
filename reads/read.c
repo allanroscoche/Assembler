@@ -18,7 +18,12 @@ int comparador(Read * base, Read * read,unsigned int shift){
   count=0;
   if((base->next != NULL) || (read->next != NULL))
      return 0;
-  for(i=size-1;(i-shift)>0;i--){
+
+  for(i=size-1;(i-shift)>0;i--)
+    if(base->bases[i] == read->bases[i-shift])
+      break;
+
+  for(;(i-shift)>0;i--){
     count++;
     if(base->bases[i] != read->bases[i-shift])
       break;
